@@ -67,9 +67,11 @@ class Scanner
                         if (!Notifier::isPokemonAllowed($pokemonId))
                             continue;
 
-                        $encounterIvRate = Tools::calculateIvRate($pokemonEncounter->individual_attack, $pokemonEncounter->individual_defense, $pokemonEncounter->individual_stamina);
-                        $minAlertIvRate = Notifier::getMinimalIvForPokemon($pokemonId);
-                        if ($encounterIvRate >= $minAlertIvRate) { // Create SpawnPoint if criterias are met
+                        $shouldNotify = Notifier::isPokemonNotified($pokemonId);
+                        // $encounterIvRate = Tools::calculateIvRate($pokemonEncounter->individual_attack, $pokemonEncounter->individual_defense, $pokemonEncounter->individual_stamina);
+                        // $minAlertIvRate = Notifier::getMinimalIvForPokemon($pokemonId);
+                        // if ($encounterIvRate >= $minAlertIvRate) { // Create SpawnPoint if criterias are met
+                        if ($shouldNotify) { // Create SpawnPoint if criterias are met
                             $spawnPoint = new SpawnPoint();
                             $spawnPoint->pokemon_id = $pokemonId;
                             $spawnPoint->encounter_id = $pokemonEncounter->encounter_id;

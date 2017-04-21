@@ -1,4 +1,4 @@
-# PoGoScanner - A simple Pokémon Go scanner
+# PoGo Scanner - A simple Pokémon Go scanner
 ## About
 
 A simple scanner based on website platforms (like PokeHunt, PokeHunter, etc.).
@@ -23,3 +23,11 @@ Just launch scanner.php in PHP CLI :
 
 ## View results
 Create a VirtualHost with the repository root path as DocumentRoot and index.php as default file.
+
+## Changelog
+
+### [0.1-beta] - 2017-04-21
+Initial version
+
+### [0.2-beta] - 2017-04-21
+Changed Notifier since API no longer return Pokémon IVs. Notifier now works in reverse: only Pokémon that are in table notifier and that are not disallowed will be added to spawn points.

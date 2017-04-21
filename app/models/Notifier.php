@@ -2,6 +2,9 @@
 
 use Curl\Curl;
 
+/**
+ * That class defines which Pokémon are meant to be notified to users.
+ */
 class Notifier extends ObjectModel
 {
     const CACHE_KEY_NOTIFIERS = 'Notifier::notifiers';
@@ -44,6 +47,7 @@ class Notifier extends ObjectModel
      * Get minimal wanted IV for a particular pokemon. Fall-back to default
      * configuration if notifier does not exist.
      *
+     * @deprecated since API no longer return IVs
      * @param int $pokemonId
      * @return float
      */
@@ -54,12 +58,36 @@ class Notifier extends ObjectModel
         return (float) (isset($notifiers[$pokemonId]) ? $notifiers[$pokemonId]->min_iv : $defaultMinIv);
     }
 
+    /**
+     * Indicates wether a Pokémon should be notified or not.
+     *
+     * @param int $pokemonId
+     * @return bool
+     */
+    public static function isPokemonNotified($pokemonId) {
+        $notifiers = self::getAll();
+
+        return isset($notifiers[$pokemonId]) && $notifiers[$pokemonId]->isAllowed();
+    }
+
+    /**
+     * Indicates if a Pokémon is allowed to be notified.
+     *
+     * @deprecated since API no longer return IVs
+     * @param int $pokemonId
+     * @return bool
+     */
     public static function isPokemonAllowed($pokemonId) {
         $notifiers = self::getAll();
 
         return (isset($notifiers[$pokemonId]) ? $notifiers[$pokemonId]->isAllowed() : true);
     }
 
+    /**
+     * Indicates if a Pokémon has been strictly disallowed or not.
+     *
+     * @return bool
+     */
     public function isAllowed() {
         return ! ((bool) $this->is_disallowed);
     }
