@@ -3,7 +3,7 @@
 class Tools
 {
     const SERVER_MEMORY_LIMIT = '256M';
-	const SERVER_MAXIMUM_EXECUTION_TIME = 120; // 2 minutes
+    const SERVER_MAXIMUM_EXECUTION_TIME = 120; // 2 minutes
 
     public static function strtoupper($str)
     {
@@ -45,7 +45,7 @@ class Tools
             $memoryLimit = self::SERVER_MEMORY_LIMIT;
 
         set_time_limit($timeLimit);
-		ini_set('memory_limit', $memoryLimit);
+        ini_set('memory_limit', $memoryLimit);
     }
 
     public static function argvToGET($argc, $argv)

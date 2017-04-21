@@ -11,16 +11,16 @@ class PoGoScannerException extends Exception
         if (_MODE_DEV_) {
             // Display error message
             echo '<style>
-				#psException{font-family: Verdana; font-size: 14px}
-				#psException h2{color: #F20000}
-				#psException p{padding-left: 20px}
-				#psException ul li{margin-bottom: 10px}
-				#psException a{font-size: 12px; color: #000000}
-				#psException .psTrace, #psException .psArgs{display: none}
-				#psException pre{border: 1px solid #236B04; background-color: #EAFEE1; padding: 5px; font-family: Courier; width: 99%; overflow-x: auto; margin-bottom: 30px;}
-				#psException .psArgs pre{background-color: #F1FDFE;}
-				#psException pre .selected{color: #F20000; font-weight: bold;}
-			</style>';
+                #psException{font-family: Verdana; font-size: 14px}
+                #psException h2{color: #F20000}
+                #psException p{padding-left: 20px}
+                #psException ul li{margin-bottom: 10px}
+                #psException a{font-size: 12px; color: #000000}
+                #psException .psTrace, #psException .psArgs{display: none}
+                #psException pre{border: 1px solid #236B04; background-color: #EAFEE1; padding: 5px; font-family: Courier; width: 99%; overflow-x: auto; margin-bottom: 30px;}
+                #psException .psArgs pre{background-color: #F1FDFE;}
+                #psException pre .selected{color: #F20000; font-weight: bold;}
+            </style>';
             echo '<div id="psException">';
             echo '<h2>['.get_class($this).']</h2>';
             echo $this->getExtendedMessage();

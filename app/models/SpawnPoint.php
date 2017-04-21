@@ -191,7 +191,7 @@ class SpawnPoint extends ObjectModel
     }
 
     public function add($autodate = true, $null_values = false)
-	{
+    {
         parent::add($autodate, $null_values);
 
         // Update cache

@@ -264,9 +264,9 @@ class DbPDO extends Db
         }
 
         $result = $link->query('
-		CREATE TABLE `test` (
-			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE='.$engine);
+        CREATE TABLE `test` (
+            `test` tinyint(1) unsigned NOT NULL
+        ) ENGINE='.$engine);
         if (!$result) {
             $error = $link->errorInfo();
             return $error[2];

@@ -1,12 +1,13 @@
-# PoGoScanner
+# PoGoScanner - A simple Pokémon Go scanner
 ## About
 
-A simple scanner based on website platforms (like PokeHunt, PokeHunter, etc.)
+A simple scanner based on website platforms (like PokeHunt, PokeHunter, etc.).
 
 ## Requirements
 1. PHP 5.3+
 2. MySQL 5.1+
 3. Composer (https://getcomposer.org/download/)
+4. Nginx or Apache
 
 ## Installation
 

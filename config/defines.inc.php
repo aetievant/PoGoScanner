@@ -2,7 +2,7 @@
 
 /* Debug only */
 if (!defined('_MODE_DEV_')) {
-	define('_MODE_DEV_', false);
+    define('_MODE_DEV_', false);
 }
 /* Compatibility warning */
 if (_MODE_DEV_ === true) {
