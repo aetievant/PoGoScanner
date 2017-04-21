@@ -1,0 +1,220 @@
+move_id;french_name;english_name
+1;Thunder Shock;Thunder Shock
+2;Quick Attack;Quick Attack
+3;Scratch;Scratch
+4;Ember;Ember
+5;Vine Whip;Vine Whip
+6;Tackle;Tackle
+7;Razor Leaf;Razor Leaf
+8;Take Down;Take Down
+9;Water Gun;Water Gun
+10;Bite;Bite
+11;Pound;Pound
+12;Double Slap;Double Slap
+13;Wrap;Wrap
+14;Hyper Beam;Hyper Beam
+15;Lick;Lick
+16;Dark Pulse;Dark Pulse
+17;Smog;Smog
+18;Sludge;Sludge
+19;Metal Claw;Metal Claw
+20;Vice Grip;Vice Grip
+21;Flame Wheel;Flame Wheel
+22;Megahorn;Megahorn
+23;Wing Attack;Wing Attack
+24;Flamethrower;Flamethrower
+25;Sucker Punch;Sucker Punch
+26;Dig;Dig
+27;Low Kick;Low Kick
+28;Cross Chop;Cross Chop
+29;Psycho Cut;Psycho Cut
+30;Psybeam;Psybeam
+31;Earthquake;Earthquake
+32;Stone Edge;Stone Edge
+33;Ice Punch;Ice Punch
+34;Heart Stamp;Heart Stamp
+35;Discharge;Discharge
+36;Flash Cannon;Flash Cannon
+37;Peck;Peck
+38;Drill Peck;Drill Peck
+39;Ice Beam;Ice Beam
+40;Blizzard;Blizzard
+41;Air Slash;Air Slash
+42;Heat Wave;Heat Wave
+43;Twineedle;Twineedle
+44;Poison Jab;Poison Jab
+45;Aerial Ace;Aerial Ace
+46;Drill Run;Drill Run
+47;Petal Blizzard;Petal Blizzard
+48;Mega Drain;Mega Drain
+49;Bug Buzz;Bug Buzz
+50;Poison Fang;Poison Fang
+51;Night Slash;Night Slash
+52;Slash;Slash
+53;Bubble Beam;Bubble Beam
+54;Submission;Submission
+55;Karate Chop;Karate Chop
+56;Low Sweep;Low Sweep
+57;Aqua Jet;Aqua Jet
+58;Aqua Tail;Aqua Tail
+59;Seed Bomb;Seed Bomb
+60;Psyshock;Psyshock
+61;Rock Throw;Rock Throw
+62;Ancient Power;Ancient Power
+63;Rock Tomb;Rock Tomb
+64;Rock Slide;Rock Slide
+65;Power Gem;Power Gem
+66;Shadow Sneak;Shadow Sneak
+67;Shadow Punch;Shadow Punch
+68;Shadow Claw;Shadow Claw
+69;Ominous Wind;Ominous Wind
+70;Shadow Ball;Shadow Ball
+71;Bullet Punch;Bullet Punch
+72;Magnet Bomb;Magnet Bomb
+73;Steel Wing;Steel Wing
+74;Iron Head;Iron Head
+75;Parabolic Charge;Parabolic Charge
+76;Spark;Spark
+77;Thunder Punch;Thunder Punch
+78;Thunder;Thunder
+79;Thunderbolt;Thunderbolt
+80;Twister;Twister
+81;Dragon Breath;Dragon Breath
+82;Dragon Pulse;Dragon Pulse
+83;Dragon Claw;Dragon Claw
+84;Disarming Voice;Disarming Voice
+85;Draining Kiss;Draining Kiss
+86;Dazzling Gleam;Dazzling Gleam
+87;Moonblast;Moonblast
+88;Play Rough;Play Rough
+89;Cross Poison;Cross Poison
+90;Sludge Bomb;Sludge Bomb
+91;Sludge Wave;Sludge Wave
+92;Gunk Shot;Gunk Shot
+93;Mud Shot;Mud Shot
+94;Bone Club;Bone Club
+95;Bulldoze;Bulldoze
+96;Mud Bomb;Mud Bomb
+97;Fury Cutter;Fury Cutter
+98;Bug Bite;Bug Bite
+99;Signal Beam;Signal Beam
+100;X Scissor;X Scissor
+101;Flame Charge;Flame Charge
+102;Flame Burst;Flame Burst
+103;Fire Blast;Fire Blast
+104;Brine;Brine
+105;Water Pulse;Water Pulse
+106;Scald;Scald
+107;Hydro Pump;Hydro Pump
+108;Psychic;Psychic
+109;Psystrike;Psystrike
+110;Ice Shard;Ice Shard
+111;Icy Wind;Icy Wind
+112;Frost Breath;Frost Breath
+113;Absorb;Absorb
+114;Giga Drain;Giga Drain
+115;Fire Punch;Fire Punch
+116;Solar Beam;Solar Beam
+117;Leaf Blade;Leaf Blade
+118;Power Whip;Power Whip
+119;Splash;Splash
+120;Acid;Acid
+121;Air Cutter;Air Cutter
+122;Hurricane;Hurricane
+123;Brick Break;Brick Break
+124;Cut;Cut
+125;Swift;Swift
+126;Horn Attack;Horn Attack
+127;Stomp;Stomp
+128;Headbutt;Headbutt
+129;Hyper Fang;Hyper Fang
+130;Slam;Slam
+131;Body Slam;Body Slam
+132;Rest;Rest
+133;Struggle;Struggle
+134;Scald (Blastoise);Scald (Blastoise)
+135;Hydro Pump (Blastoise);Hydro Pump (Blastoise)
+136;Wrap Green;Wrap Green
+137;Wrap Pink;Wrap Pink
+200;Fury Cutter;Fury Cutter
+201;Bug Bite;Bug Bite
+202;Bite;Bite
+203;Sucker Punch;Sucker Punch
+204;Dragon Breath;Dragon Breath
+205;Thunder Shock;Thunder Shock
+206;Spark;Spark
+207;Low Kick;Low Kick
+208;Karate Chop;Karate Chop
+209;Ember;Ember
+210;Wing Attack;Wing Attack
+211;Peck;Peck
+212;Lick;Lick
+213;Shadow Claw;Shadow Claw
+214;Vine Whip;Vine Whip
+215;Razor Leaf;Razor Leaf
+216;Mud Shot;Mud Shot
+217;Ice Shard;Ice Shard
+218;Frost Breath;Frost Breath
+219;Quick Attack;Quick Attack
+220;Scratch;Scratch
+221;Tackle;Tackle
+222;Pound;Pound
+223;Cut;Cut
+224;Poison Jab;Poison Jab
+225;Acid;Acid
+226;Psycho Cut;Psycho Cut
+227;Rock Throw;Rock Throw
+228;Metal Claw;Metal Claw
+229;Bullet Punch;Bullet Punch
+230;Water Gun;Water Gun
+231;Splash;Splash
+232;Water Gun (Blastoise);Water Gun (Blastoise)
+233;Mud Slap;Mud Slap
+234;Zen Headbutt;Zen Headbutt
+235;Confusion;Confusion
+236;Poison Sting;Poison Sting
+237;Bubble;Bubble
+238;Feint Attack;Feint Attack
+239;Steel Wing;Steel Wing
+240;Fire Fang;Fire Fang
+241;Rock Smash;Rock Smash
+242;Transform;Transform
+243;Counter;Counter
+244;Powder Snow;Powder Snow
+245;Close Combat;Close Combat
+246;Dynamic Punch;Dynamic Punch
+247;Focus Blast;Focus Blast
+248;Aurora Beam;Aurora Beam
+249;Charge Beam;Charge Beam
+250;Volt Switch;Volt Switch
+251;Wild Charge;Wild Charge
+252;Zap Cannon;Zap Cannon
+253;Dragon Tail;Dragon Tail
+254;Avalanche;Avalanche
+255;Air Slash;Air Slash
+256;Brave Bird;Brave Bird
+257;Sky Attack;Sky Attack
+258;Sand Tomb;Sand Tomb
+259;Rock Blast;Rock Blast
+260;Infestation;Infestation
+261;Struggle Bug;Struggle Bug
+262;Silver Wind;Silver Wind
+263;Astonish;Astonish
+264;Hex;Hex
+265;Night Shade;Night Shade
+266;Iron Tail;Iron Tail
+267;Gyro Ball;Gyro Ball
+268;Heavy Slam;Heavy Slam
+269;Fire Spin;Fire Spin
+270;Overheat;Overheat
+271;Bullet Seed;Bullet Seed
+272;Grass Knot;Grass Knot
+273;Energy Ball;Energy Ball
+274;Extrasensory;Extrasensory
+275;Futuresight;Futuresight
+276;Mirror Coat;Mirror Coat
+277;Outrage;Outrage
+278;Snarl;Snarl
+279;Crunch;Crunch
+280;Foul Play;Foul Play
+281;Hidden Power;Hidden Power
