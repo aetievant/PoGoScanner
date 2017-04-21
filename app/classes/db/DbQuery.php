@@ -251,7 +251,7 @@ class DbQuery
      * Generates query and return SQL string
      *
      * @return string
-     * @throws PrestaShopException
+     * @throws PoGoScannerException
      */
     public function build()
     {
@@ -262,7 +262,7 @@ class DbQuery
         }
 
         if (!$this->query['from']) {
-            throw new PrestaShopException('Table name not set in DbQuery object. Cannot build a valid SQL query.');
+            throw new PoGoScannerException('Table name not set in DbQuery object. Cannot build a valid SQL query.');
         }
 
         $sql .= 'FROM '.implode(', ', $this->query['from'])."\n";

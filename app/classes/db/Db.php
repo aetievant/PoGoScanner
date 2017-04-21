@@ -808,50 +808,6 @@ abstract class Db
     }
 
     /**
-     * Executes a query
-     *
-     * @deprecated 1.5.0.1
-     * @param string|DbQuery $sql
-     * @param bool $use_cache
-     * @return array|bool|mysqli_result|PDOStatement|resource
-     * @throws Exception
-     */
-    public static function s($sql, $use_cache = true)
-    {
-        Tools::displayAsDeprecated();
-        return Db::getInstance()->executeS($sql, true, $use_cache);
-    }
-
-    /**
-     * Executes a query
-     *
-     * @deprecated 1.5.0.1
-     * @param $sql
-     * @param int $use_cache
-     * @return array|bool|mysqli_result|PDOStatement|resource
-     */
-    public static function ps($sql, $use_cache = 1)
-    {
-        Tools::displayAsDeprecated();
-        $ret = Db::s($sql, $use_cache);
-        return $ret;
-    }
-
-    /**
-     * Executes a query and kills process (dies)
-     *
-     * @deprecated 1.5.0.1
-     * @param $sql
-     * @param int $use_cache
-     */
-    public static function ds($sql, $use_cache = 1)
-    {
-        Tools::displayAsDeprecated();
-        Db::s($sql, $use_cache);
-        die();
-    }
-
-    /**
      * Get used link instance
      *
      * @return PDO|mysqli|resource Resource

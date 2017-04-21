@@ -3,7 +3,7 @@ class Autoload
 {
 
     /**
-     * @var PrestaShopAutoload
+     * @var Autoload
      */
     protected static $instance;
 
