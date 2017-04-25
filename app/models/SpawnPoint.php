@@ -78,6 +78,9 @@ class SpawnPoint extends ObjectModel
     /** @var string */
     public $pokemon_gender_english_name;
 
+    /** @var bool */
+    public $notifier_is_important = false;
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -111,6 +114,7 @@ class SpawnPoint extends ObjectModel
         ),
         'associations' => array(
             'pokemon'           => array('type' => self::HAS_ONE, 'field' => 'pokemon_id', 'object' => 'Pokemon'),
+            'notifier'          => array('type' => self::HAS_ONE, 'field' => 'pokemon_id', 'foreign_field' => 'pokemon_id', 'object' => 'Notifier'),
             'zone'              => array('type' => self::HAS_ONE, 'field' => 'zone_id', 'object' => 'Zone'),
             'pokemon_move_1'    => array('type' => self::HAS_ONE, 'field' => 'pokemon_move_id_1', 'foreign_field' => 'pokemon_move_id', 'object' => 'PokemonMove'),
             'pokemon_move_2'    => array('type' => self::HAS_ONE, 'field' => 'pokemon_move_id_2', 'foreign_field' => 'pokemon_move_id', 'object' => 'PokemonMove'),
@@ -223,5 +227,15 @@ class SpawnPoint extends ObjectModel
         }
 
         return $collection->getAll();
+    }
+
+    /**
+     * Indicates if that spawn point is important and should be treated
+     * with special means.
+     *
+     * @return bool
+     */
+    public function isImportant() {
+        return (bool) $this->notifier_is_important;
     }
 }

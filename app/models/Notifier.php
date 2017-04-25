@@ -16,7 +16,11 @@ class Notifier extends ObjectModel
     /** @var float */
     public $min_iv;
 
-    public $is_disallowed;
+    /** @var bool */
+    public $is_disallowed = false;
+
+    /** @var bool */
+    public $is_important = false;
 
     /**
      * @see ObjectModel::$definition
@@ -28,6 +32,7 @@ class Notifier extends ObjectModel
             'pokemon_id'    => array('type' => self::TYPE_INT),
             'min_iv'        => array('type' => self::TYPE_FLOAT),
             'is_disallowed' => array('type' => self::TYPE_BOOL),
+            'is_important' => array('type' => self::TYPE_BOOL),
         ),
         'associations' => array(
             'pokemon' => array('type' => self::HAS_ONE, 'field' => 'pokemon_id', 'object' => 'Pokemon'),
@@ -99,10 +104,13 @@ class Notifier extends ObjectModel
         if (!$notifications->count())
             return;
 
+        /* @var $notification SpawnPoint */
         foreach ($notifications as $notification) {
             $hasError = false;
             $hasError |= !self::sendEmailNotification($notification);
-            $hasError |= !self::sendFreeSmsNotification($notification);
+
+            if ($notification->isImportant())
+                $hasError |= !self::sendFreeSmsNotification($notification);
 
             if (!$hasError)
                 $treatedSpawnPointIds[] = $notification->id;
