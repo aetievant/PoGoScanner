@@ -10,7 +10,6 @@ class Configuration
      */
     protected static $definition = array(
         'table' => 'configuration',
-        'primary' => 'configuration_id',
     );
 
     /**
@@ -50,19 +49,18 @@ class Configuration
     }
 
     /**
-     * Return ID a configuration key
+     * Checks configuration key database existence
      *
      * @param string $key
-     * @param int $id_shop_group
-     * @param int $id_shop
-     * @return int Configuration key ID
+     * @return bool
      */
-    public static function getIdByName($key)
+    public static function existsInDatabase($key)
     {
-        $sql = 'SELECT `'.bqSQL(self::$definition['primary']).'`
-                FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'`
-                WHERE key = \''.pSQL($key).'\'';
-        return (int)Db::getInstance()->getValue($sql);
+        $sql = 'SELECT `key`
+                FROM `'.bqSQL(self::$definition['table']).'`
+                WHERE `key` = \''.pSQL($key).'\'';
+
+        return (bool)Db::getInstance()->getValue($sql);
     }
 
     /**
@@ -123,7 +121,7 @@ class Configuration
         }
         // If key does not exists, create it
         else {
-            if (!$configID = Configuration::getIdByName($key)) {
+            if (!$configID = Configuration::existsInDatabase($key)) {
                 $now = date('Y-m-d H:i:s');
                 $data = array(
                     'key'          => pSQL($key),

@@ -1,7 +1,9 @@
 <?php
 // https://browse-tutorials.com/tutorial/php-memory-management
-
-use Curl\Curl;
+/*
+ * Note: latest versions of Curl PHP class (>= 7.3.0) apparently fix memory leaks problems.
+ * Do not forget to composer update the projet in order to get benefits from it.
+ */
 
 /**
  * Response example :
@@ -29,10 +31,38 @@ use Curl\Curl;
     public 'weight' => float 8.62822
  *
  */
-
 class Scanner
 {
-    protected static $_servers;
+    /** @var Scanner */
+    protected static $_instance;
+
+    /** @var Server */
+    protected $_currentServer;
+
+    /** @var Curl\Curl */
+    protected $_curl;
+
+   /**
+    * Get singleton
+    *
+    * @return Scanner
+    */
+   public static function getInstance() {
+
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self;
+        }
+
+        return self::$_instance;
+    }
+
+    protected function __construct() {
+        // Instantiate curl PHP class
+        $this->_curl = new Curl\Curl;
+
+        /** @todo: make that one dynamic. */
+        $this->_currentServer = Server::getFirstAvailable();
+    }
 
     public static function scanAllZones() {
         $zones = Zone::getZonesToScan();
@@ -40,9 +70,54 @@ class Scanner
         /* @var $zone Zone */
         foreach ($zones as $zone) {
 
-            self::doScan($zone);
+            self::getInstance()->doScan($zone);
             gc_collect_cycles(); // Use that only if needed to force garbage collector.
+            sleep(5); // Sleep for 5 sec to avoid spam requests
         }
+    }
+
+    protected function isCurrentServerAvailable() {
+        return $this->_currentServer instanceof Server && $this->_currentServer->isLoaded();
+    }
+
+    protected function assignSessionParams() {
+        if (!$this->isCurrentServerAvailable())
+            return false;
+
+        // Set user agent if available in configuration
+        if ($userAgent = Configuration::get('request_user_agent'))
+            $this->_curl->setUserAgent($userAgent);
+
+        // Set request headers if available in configuration
+        if ($requestHeaders = Configuration::get('request_headers')) {
+            $requestHeaders = unserialize($requestHeaders);
+            $this->_curl->setHeaders($requestHeaders);
+            $this->_curl->setHeader('Referer', $this->_currentServer->getHttpServerAddress());
+        }
+
+        // Set cookies, including session cookies
+        $sessionParams = $this->_currentServer->getLastSessionParams();
+
+        if (!empty($sessionParams['cookies']))
+            $this->_curl->setCookies($sessionParams['cookies']);
+    }
+
+    /**
+     * Check control request for current server, if available.
+     *
+     * @return boolean
+     */
+    protected function doControlRequest() {
+        if (!$this->isCurrentServerAvailable() || !$controlRequestUrl = $this->_currentServer->getControlRequestUrl())
+            return true;
+
+        $this->_curl->get($controlRequestUrl);
+
+        if (!$this->_curl->error) {
+            if (isset($this->_curl->response->status) && $this->_curl->response->status)
+                return true;
+        } else
+            throw new PoGoScannerException('Error while doing control request: ' . $this->_curl->errorCode . ': ' . $this->_curl->errorMessage);
     }
 
     /**
@@ -50,17 +125,27 @@ class Scanner
      *
      * @param Zone $zone
      */
-    public static function doScan(Zone $zone) {
-        $server = Server::getFirstAvailable();
+    public function doScan(Zone $zone) {
+        if (!$this->isCurrentServerAvailable())
+            return false;
 
-        $curl = new Curl();
-        $curl->get($server->getRequestUri(), self::getRequestParams($zone));
+        // First check if there is an active session
+        if ($this->_currentServer->isSessionExpired() || !$currentSessionParams = $this->_currentServer->getLastSessionParams())
+            return false;
 
-        if (!$curl->error) {
-            if (isset($curl->response->pokemons)) {
-                foreach ($curl->response->pokemons as $pokemonEncounter) {
+        $this->assignSessionParams($currentSessionParams);
+
+        if (!$this->doControlRequest())
+            return false;
+
+        $this->_curl->get($this->_currentServer->getScanRequestUrl(), $this->getRequestParams($zone));
+        var_dump($this->_curl->url, $this->_curl->requestHeaders, $this->_curl->responseHeaders, $this->_curl->responseCookies);
+
+        if (!$this->_curl->error) {
+            if (isset($this->_curl->response->pokemons)) {
+                foreach ($this->_curl->response->pokemons as $pokemonEncounter) {
 //                    var_dump($pokemonEncounter);
-                    if (!self::isExpired($pokemonEncounter->disappear_time) && !SpawnPoint::getByEncounterId($pokemonEncounter->encounter_id)) {
+                    if (!SpawnPoint::isExpired($pokemonEncounter->disappear_time) && !SpawnPoint::getByEncounterId($pokemonEncounter->encounter_id)) {
                         $pokemonId = $pokemonEncounter->pokemon_id;
 
                         // Checks if Pokémon has been disallowed in notifiers
@@ -92,44 +177,103 @@ class Scanner
                     }
                 }
                 $zone->updateScanDate(true);
+                $this->updateCurrentServerSessionParams();
             } else
                 $zone->updateScanDate();
 
-            // Try to free memory
-            $curl = null;
-            unset($curl);
         } else {
-            throw new PoGoScannerException('Error: ' . $curl->errorCode . ': ' . $curl->errorMessage);
+            throw new PoGoScannerException('Error while doing scan: ' . $this->_curl->errorCode . ': ' . $this->_curl->errorMessage);
         }
     }
 
-    protected static function getRequestParams(Zone $zone) {
-        return array(
-            //    'timestamp'     => $now, // Timestamp
-                'pokemon'       => 'true',
-                'lastpokemon'   => 'true',
-                'pokestops'     => 'false',
-                'luredonly'     => 'false',
-                'gyms'          => 'false',
-                'scanned'       => 'false',
-                'spawnpoints'   => 'false',
-                'swLat'         => $zone->sw_latitude,
-                'swLng'         => $zone->sw_longitude,
-                'neLat'         => $zone->ne_latitude,
-                'neLng'         => $zone->ne_longitude,
+    protected function getRequestParams(Zone $zone) {
+        if ($this->isCurrentServerAvailable() && $sessionParams = $this->_currentServer->getLastSessionParams()) {
+            if (!empty($sessionParams['last_request']))
+                $lastRequestParams = $sessionParams['last_request'];
+        }
 
-            //    'oSwLat'         => $zone->sw_latitude, // o probably means "original"
-            //    'oSwLng'         => $zone->sw_longitude,
-            //    'oNeLat'         => $zone->ne_latitude,
-            //    'oNeLng'         => $zone->ne_longitude,
+        $now = Tools::getTimestamp();
 
+        $params = array();
+
+        if (isset($lastRequestParams))
+            $params['timestamp'] = $now; // Current timestamp in ms
+
+        $params['pokemon'] = 'true';
+
+        if (isset($lastRequestParams))
+            $params['lastpokemon'] = 'true'; // Get the differential
+
+        $params += array(
+            'pokestops'     => 'false',
+            'luredonly'     => 'false',
+            'gyms'          => 'false',
+            'scanned'       => 'false',
+            'spawnpoints'   => 'false',
+            'swLat'         => Tools::randomizeGpsCoordinate($zone->sw_latitude),
+            'swLng'         => Tools::randomizeGpsCoordinate($zone->sw_longitude),
+            'neLat'         => Tools::randomizeGpsCoordinate($zone->ne_latitude),
+            'neLng'         => Tools::randomizeGpsCoordinate($zone->ne_longitude),
+        );
+
+        if (isset($lastRequestParams)) {
+            $params += array(
+                'oSwLat'        => $lastRequestParams['oSwLat'], // "o" means "original"
+                'oSwLng'        => $lastRequestParams['oSwLng'],
+                'oNeLat'        => $lastRequestParams['oNeLat'],
+                'oNeLng'        => $lastRequestParams['oNeLng'],
                 'reids'         => '',
                 'eids'          => '',
-            //    '_'             => $now, // Timestamp + nombre d'itération
-        );
+                '_'             => $lastRequestParams['_'] + 1, // last iteration number + 1
+            );
+        } else {
+            $params += array(
+                    'reids'         => '',
+                    'eids'          => '',
+                    '_'             => $now, // Initial timestamp for firt iteration
+            );
+        }
+
+        return $params;
     }
 
-    protected static function isExpired($timestamp) {
-        return Tools::getTimestamp() > $timestamp;
+    /**
+     * Update session params for current server, according to last cURL response.
+     *
+     * @param Zone $zone
+     */
+    protected function updateCurrentServerSessionParams() {
+        if (!$this->isCurrentServerAvailable() || $this->_curl->error)
+            return false;
+
+        $lastSessionParams = $this->_currentServer->getLastSessionParams();
+        $lastRequestParams = Tools::parseHttpRequest($this->_curl->url);
+
+        // Refresh cookies
+        if ($this->_curl->responseCookies)
+            $lastSessionParams['cookies'] = array_merge($lastSessionParams['cookies'], $this->_curl->responseCookies);
+
+        // Use response GPS coordinates, if available
+        if (isset ($this->_curl->response->oNeLat) && isset ($this->_curl->response->oNeLng)
+            && isset ($this->_curl->response->oSwLat) && isset ($this->_curl->response->oSwLng)) {
+            $lastSessionParams['last_request'] = array(
+                'oNeLat'    => $this->_curl->response->oNeLat,
+                'oNeLng'    => $this->_curl->response->oNeLng,
+                'oSwLat'    => $this->_curl->response->oSwLat,
+                'oSwLng'    => $this->_curl->response->oSwLng,
+            );
+        } else { // Used request params otherwise
+            $lastSessionParams['last_request'] = array(
+                'oNeLat'    => $lastRequestParams['swLat'],
+                'oNeLng'    => $lastRequestParams['neLng'],
+                'oSwLat'    => $lastRequestParams['swLat'],
+                'oSwLng'    => $lastRequestParams['swLng'],
+            );
+        }
+
+        // Refresh iteration number
+        $lastSessionParams['last_request']['_'] = $lastRequestParams['_'];
+
+        return $this->_currentServer->updateSessionParams($lastSessionParams);
     }
 }

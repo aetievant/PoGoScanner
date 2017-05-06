@@ -238,4 +238,8 @@ class SpawnPoint extends ObjectModel
     public function isImportant() {
         return (bool) $this->notifier_is_important;
     }
+
+    public static function isExpired($timestamp) {
+        return Tools::getTimestamp() > $timestamp;
+    }
 }
