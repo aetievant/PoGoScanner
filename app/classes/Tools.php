@@ -116,8 +116,23 @@ class Tools
      * @param type $urlRequest
      * @return array
      */
+    public static function parseHttpRequest($httpRequest) {
+        if (($urlRequest = parse_url($httpRequest, PHP_URL_QUERY)) === false)
+            return false;
+
+        return self::parseUrlRequest($urlRequest);
+    }
+
+    /**
+     * Parse a HTTP request
+     *
+     * @param type $urlRequest
+     * @return array
+     */
     public static function parseUrlRequest($urlRequest) {
-        return parse_str($urlRequest);
+        parse_str($urlRequest, $res);
+
+        return $res;
     }
 
     public static function getMySQLDatetime($timestamp = null, $fromMsTimestamp = true) {
@@ -193,5 +208,18 @@ class Tools
      */
     public static function setIsRunning($isRunning) {
         return Configuration::updateValue('is_currently_running', (int) $isRunning);
+    }
+
+    /**
+     * Randomize the last digits of a coordinate, as we know they are insignificant.
+     * Useful to make each call request unique.
+     *
+     * Returns a full formatted string ready to go for request.
+     *
+     * @param float $coordinate
+     * @return string randomized coordinates
+     */
+    public static function randomizeGpsCoordinate($coordinate) {
+        return ((float) $coordinate + (mt_rand(100, 999) / 10000000000)) . mt_rand(1000,9999);
     }
 }

@@ -308,21 +308,12 @@ abstract class ObjectModel
     }
 
     /**
-     * Specify if an ObjectModel is already in database
+     * Checks wether this instance has been loaded from database or not.
      *
-     * @param int $id_entity
-     * @param string $table
-     * @return boolean
+     * @return bool
      */
-    public static function existsInDatabase($id_entity, $table)
-    {
-        $row = Db::getInstance()->getRow('
-            SELECT `id_'.bqSQL($table).'` as id
-            FROM `'.bqSQL($table).'` e
-            WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity
-        );
-
-        return isset($row['id']);
+    public function isLoaded() {
+        return (bool) $this->id;
     }
 
     /**
