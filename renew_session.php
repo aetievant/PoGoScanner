@@ -26,12 +26,12 @@ try {
     $requestHeaders = array(
         'Accept'                    => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language'           => 'fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3',
-        'Accept-Encoding'           => 'gzip, deflate, br',
         'Connection'                => 'keep-alive',
         'Upgrade-Insecure-Requests' => '1',
     );
 
     $curl->setHeaders($requestHeaders);
+    $curl->setOpt(CURLOPT_ENCODING, 'gzip, deflate, br');
 
     $curl->get($server->getHttpServerAddress());
 

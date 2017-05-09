@@ -69,8 +69,8 @@ class Scanner
 
         /* @var $zone Zone */
         foreach ($zones as $zone) {
-
             self::getInstance()->doScan($zone);
+
             gc_collect_cycles(); // Use that only if needed to force garbage collector.
             sleep(5); // Sleep for 5 sec to avoid spam requests
         }
@@ -94,6 +94,9 @@ class Scanner
             $this->_curl->setHeaders($requestHeaders);
             $this->_curl->setHeader('Referer', $this->_currentServer->getHttpServerAddress());
         }
+
+        // configure accepted encoding responses
+        $this->_curl->setOpt(CURLOPT_ENCODING, 'gzip, deflate, br');
 
         // Set cookies, including session cookies
         $sessionParams = $this->_currentServer->getLastSessionParams();
@@ -139,7 +142,7 @@ class Scanner
             return false;
 
         $this->_curl->get($this->_currentServer->getScanRequestUrl(), $this->getRequestParams($zone));
-        var_dump($this->_curl->url, $this->_curl->requestHeaders, $this->_curl->responseHeaders, $this->_curl->responseCookies);
+//        var_dump($this->_curl->url, $this->_curl->requestHeaders, $this->_curl->responseHeaders, $this->_curl->responseCookies, $this->_curl->response);
 
         if (!$this->_curl->error) {
             if (isset($this->_curl->response->pokemons)) {
@@ -177,10 +180,11 @@ class Scanner
                     }
                 }
                 $zone->updateScanDate(true);
-                $this->updateCurrentServerSessionParams();
             } else
                 $zone->updateScanDate();
 
+            // Update session params in all success cases, wether we got good Pokémon or not.
+            $this->updateCurrentServerSessionParams();
         } else {
             throw new PoGoScannerException('Error while doing scan: ' . $this->_curl->errorCode . ': ' . $this->_curl->errorMessage);
         }
