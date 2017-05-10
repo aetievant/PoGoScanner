@@ -13,7 +13,7 @@ class DbQuery
     protected $query = array(
         'type'   => 'SELECT',
         'select' => array(),
-        'from'   => '',
+        'from'   => array(),
         'join'   => array(),
         'where'  => array(),
         'group'  => array(),
