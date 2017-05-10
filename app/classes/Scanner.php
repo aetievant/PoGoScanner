@@ -196,16 +196,17 @@ class Scanner
                 $lastRequestParams = $sessionParams['last_request'];
         }
 
-        $now = Tools::getTimestamp();
+        $now = Tools::getTimestamp(); // Current timestamp in ms
 
         $params = array();
 
+        // nth request context: use last request timestamp if avaiable, current time otherwise
         if (isset($lastRequestParams))
-            $params['timestamp'] = $now; // Current timestamp in ms
+            $params['timestamp'] = isset($lastRequestParams['timestamp']) ? $lastRequestParams['timestamp'] : $now;
 
         $params['pokemon'] = 'true';
 
-        if (isset($lastRequestParams))
+        if (isset($lastRequestParams)) // nth request context
             $params['lastpokemon'] = 'true'; // Get the differential
 
         $params += array(
@@ -220,7 +221,7 @@ class Scanner
             'neLng'         => Tools::randomizeGpsCoordinate($zone->ne_longitude),
         );
 
-        if (isset($lastRequestParams)) {
+        if (isset($lastRequestParams)) { // nth request context
             $params += array(
                 'oSwLat'        => $lastRequestParams['oSwLat'], // "o" means "original"
                 'oSwLng'        => $lastRequestParams['oSwLng'],
@@ -230,11 +231,11 @@ class Scanner
                 'eids'          => '',
                 '_'             => $lastRequestParams['_'] + 1, // last iteration number + 1
             );
-        } else {
+        } else { // first request context
             $params += array(
                     'reids'         => '',
                     'eids'          => '',
-                    '_'             => $now, // Initial timestamp for firt iteration
+                    '_'             => $now, // Initial timestamp for first iteration
             );
         }
 
@@ -258,8 +259,8 @@ class Scanner
             $lastSessionParams['cookies'] = array_merge($lastSessionParams['cookies'], $this->_curl->responseCookies);
 
         // Use response GPS coordinates, if available
-        if (isset ($this->_curl->response->oNeLat) && isset ($this->_curl->response->oNeLng)
-            && isset ($this->_curl->response->oSwLat) && isset ($this->_curl->response->oSwLng)) {
+        if (isset($this->_curl->response->oNeLat) && isset($this->_curl->response->oNeLng)
+            && isset($this->_curl->response->oSwLat) && isset($this->_curl->response->oSwLng)) {
             $lastSessionParams['last_request'] = array(
                 'oNeLat'    => $this->_curl->response->oNeLat,
                 'oNeLng'    => $this->_curl->response->oNeLng,
@@ -274,6 +275,12 @@ class Scanner
                 'oSwLng'    => $lastRequestParams['swLng'],
             );
         }
+
+        // Save last timestamp if available
+        if (isset($this->_curl->response->timestamp))
+            $lastSessionParams['last_request']['timestamp'] = $this->_curl->response->timestamp;
+        elseif (isset($lastRequestParams['timestamp'])) // take the request timestamp otherwise
+            $lastSessionParams['last_request']['timestamp'] = $lastRequestParams['timestamp'];
 
         // Refresh iteration number
         $lastSessionParams['last_request']['_'] = $lastRequestParams['_'];
